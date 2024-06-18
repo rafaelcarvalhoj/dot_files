@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cp ~/.config/bashrc ~/.bashrc
-cp ~/.config/bash_aliases ~/.bash_aliases
+cp ~/.config/bash/bashrc ~/.bashrc
+cp ~/.config/bash/bash_aliases ~/.bash_aliases
