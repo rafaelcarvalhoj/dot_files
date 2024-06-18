@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Dependencies
+# sudo apt install gcc-riscv64-unknown-elf binutils-riscv64-unknown-elf qemu-system-misc
+
 if [[ -z $1 ]]; then
 	echo "usage: $0 <file_name>"
 	exit 1
