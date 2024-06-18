@@ -1,0 +1,8 @@
+alias xcp="xclip -sel c < "
+alias v="nvim"
+alias update="sudo bash ~/.scripts/update.sh"
+alias chococino="ssh -p13508 a222021817@chococino.naquadah.com.br"
+alias vim="nvim"
+alias py="python3"
+alias riscv="bash ~/.scripts/compile_riscv.sh"
+alias start_base_riscv="bash ~/.scripts/start_riscv.sh"
