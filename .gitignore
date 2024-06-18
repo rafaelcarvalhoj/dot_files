@@ -4,5 +4,10 @@
 !.gitignore
 
 !nvim
+!nvim/**
 
 !alacritty
+!alacritty/**
+
+!scripts
+!scripts/**
