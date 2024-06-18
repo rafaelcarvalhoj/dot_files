@@ -1,11 +1,13 @@
 import = [
-  "/home/rafael-carvalho/.config/nvm/versions/node/v20.11.1/lib/node_modules/alacritty-themes/themes/Gruvbox-Dark.toml"
+  "/home/rafael/.nvm/versions/node/v20.12.2/lib/node_modules/alacritty-themes/themes/Gruvbox-Dark.toml"
 ]
 
 [shell]
-  program="/bin/bash"
-
+program = "/bin/bash"
 
 [font]
-  size = 14.0
-  normal = { family = "JetBrains Mono", style = "Regular" }
+size = 14
+
+	[font.normal]
+  family = "JetBrains Mono"
+  style = "Regular"
