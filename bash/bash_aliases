@@ -98,7 +98,7 @@ diffin() {
                 ;;
             -*)
                 echo "Invalid option $1"
-                echo "$USAGE"
+                echo -e "$USAGE"
                 exit 1
                 ;;
             *)
@@ -106,7 +106,7 @@ diffin() {
                     BIN="$1"
                 else
                     echo "Invalid option $1"
-                    echo "$USAGE"
+                    echo -e "$USAGE"
                     exit 1
                 fi
                 shift
