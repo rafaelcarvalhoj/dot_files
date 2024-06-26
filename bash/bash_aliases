@@ -1,8 +1,159 @@
 alias xcp="xclip -sel c < "
-alias v="nvim"
 alias update="sudo bash ~/.config/scripts/update.sh"
 alias chococino="ssh -p13508 a222021817@chococino.naquadah.com.br"
-alias vim="nvim"
 alias py="python3"
 alias riscv="bash ~/.config/scripts/compile_riscv.sh"
 alias start_base_riscv="bash ~/.config/scripts/start_riscv.sh"
+alias source_bash="source ~/.bashrc && source ~/.bash_aliases"
+
+cp_template(){
+    if [[ -z $1 ]]; then
+        echo "Usage: $0 <file name>"
+        echo "Generates a C++ source file with a basic template."
+        echo
+        echo "Arguments:"
+        echo "  <file name>   The base name for the generated file (without extension)."
+        exit 1
+    fi
+
+    local FILE_NAME="$1"
+
+    local FILE_EXTENSION="cpp"
+
+    local SRC="$FILE_NAME.$FILE_EXTENSION"
+
+    cat << EOF > $SRC
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+    ios_base::sync_with_stdio(0);
+
+
+    return 0;
+}
+EOF
+    echo "file $SRC generated."
+}
+
+compile(){
+    if [[ -z $1 ]]; then
+        echo "Usage: $0 <target file> [output file]"
+        echo "Compiles a C++ source file with specific flags and options."
+        echo
+        echo "Arguments:"
+        echo "  <target file>   The C++ source file to be compiled."
+        echo "  [output file]   The name of the output binary file (optional, default is 'a.out')."
+        exit 1
+    fi
+
+    local OUT_FILE=$2
+    [[ -z $2 ]] && OUT_FILE="a.out"
+    
+    g++ -std=c++20 \
+        -O2 \
+        -g3 \
+        -Wall \
+        -fsanitize=address,undefined \
+        -fno-sanitize-recover \
+        -D LOCAL \
+        -o "$OUT_FILE" \
+        "$1"
+
+    if [ $? -ne 0 ]; then
+      echo "Compilation Failed" 1>&2
+      return 1
+    fi
+
+    echo "Compiled in $OUT_FILE."
+}
+
+diffin() {
+    local BIN=""
+    local INPUT=""
+    local TIMEOUT="2s"
+    local EXPECTED_OUTPUT="out"
+    local PROG_OUTPUT=""
+    local USAGE="Usage: $0 <bin file> [--in <input file>] [--timelimit <timeout duration>]"
+    USAGE+="\n\nChecks the output of a binary file against an expected output file."
+    USAGE+="\n\nArguments:"
+    USAGE+="\n  <bin file>            The binary file to be executed."
+    USAGE+="\n  --in <input file>     (Optional) The input file to be used as standard input for the binary."
+    USAGE+="\n  --timelimit <timeout> (Optional) The duration to wait before timing out (default is 2s)."
+    USAGE+="\n\nOutput:"
+    USAGE+="\n  AC  - Accepted, if the output matches the expected output."
+    USAGE+="\n  WA  - Wrong Answer, if the output does not match the expected output."
+    USAGE+="\n  TLE - Time Limit Exceeded, if the execution time exceeds the specified timeout."
+    USAGE+="\n  Compilation or Execution error messages if there are issues with the binary file."
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --in)
+                INPUT="$2"
+                shift 2
+                ;;
+            --timelimit)
+                TIMEOUT="${2}s"
+                shift 2
+                ;;
+            -*)
+                echo "Invalid option $1"
+                echo "$USAGE"
+                exit 1
+                ;;
+            *)
+                if [[ -z $BIN ]]; then
+                    BIN="$1"
+                else
+                    echo "Invalid option $1"
+                    echo "$USAGE"
+                    exit 1
+                fi
+                shift
+                ;;
+        esac
+    done
+
+    if [[ -z $BIN ]]; then
+        echo -e "Error: bin file is required"
+        echo -e "$USAGE"
+        exit 1
+    fi
+
+    if [[ ! -x $BIN ]]; then
+        echo "Error: '$BIN' is not executable or does not exist"
+        exit 1
+    fi
+
+    PROG_OUTPUT="${BIN}.out"
+
+    if [[ -n $INPUT ]]; then
+        timeout "$TIMEOUT" ./"$BIN" < "$INPUT" > "$PROG_OUTPUT"
+    else
+        timeout "$TIMEOUT" ./"$BIN" > "$PROG_OUTPUT"
+    fi
+
+    local EXIT_STATUS=$?
+
+    if [[ $EXIT_STATUS -eq 124 ]]; then
+        echo "TLE"
+        exit 1
+    elif [[ $EXIT_STATUS -ne 0 ]]; then
+        echo "Error executing '$BIN'."
+        exit 1
+    fi
+
+    diff "$EXPECTED_OUTPUT" "$PROG_OUTPUT"
+    
+    local DIFF_STATUS=$?
+
+    if [[ $DIFF_STATUS -eq 0 ]]; then
+        echo "AC"
+    elif [[ $DIFF_STATUS -eq 1 ]]; then
+        echo "WA"
+    else
+        echo "Error diffing files."
+    fi
+
+    rm $PROG_OUTPUT
+}
