@@ -7,6 +7,7 @@ filetype plugin indent on
 " set number
 set relativenumber
 
+set nowrap
 set tabstop=4
 set shiftwidth=4
 set expandtab
@@ -25,8 +26,16 @@ set noerrorbells
 set novisualbell
 set t_vb=
 
+" backup files // undo closed files
+set undofile
+
+set undodir=/tmp//
+
+
 autocmd FileType c setlocal shiftwidth=4 tabstop=4 expandtab
 autocmd FileType cpp setlocal shiftwidth=4 tabstop=4 expandtab
+autocmd FileType ts setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType js setlocal shiftwidth=2 tabstop=2 expandtab
 
 " keymaps
 nnoremap <leader>pv :Ex<CR>
@@ -56,9 +65,20 @@ Plug 'junegunn/seoul256.vim'
 Plug 'https://github.com/junegunn/vim-easy-align.git'
 Plug 'tpope/vim-sensible'
 Plug 'EdenEast/nightfox.nvim'
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+Plug 'sheerun/vim-polyglot'
+Plug 'prisma/vim-prisma' " PRISMA SUPPORT
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 call plug#end()
 
 " color scheme
-colorscheme nightfox
+colorscheme catppuccin-mocha
+" colorscheme brogrammer
 
+
+" Airline
+let g:airline_theme='base16' " theme
+let g:airline#extensions#tabline#enabled = 1 " tab extension
+let g:airline#extensions#tabline#formatter = 'unique_tail'
