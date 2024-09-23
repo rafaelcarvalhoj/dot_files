@@ -70,6 +70,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'prisma/vim-prisma' " PRISMA SUPPORT
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'preservim/nerdtree'
 
 call plug#end()
 
@@ -82,3 +83,12 @@ colorscheme catppuccin-mocha
 let g:airline_theme='base16' " theme
 let g:airline#extensions#tabline#enabled = 1 " tab extension
 let g:airline#extensions#tabline#formatter = 'unique_tail'
+
+" Nerd Tree
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+let g:NERDTreeFileLines = 1
+" Nerd Tree on every new tab
+autocmd BufWinEnter * if &buftype != 'quickfix' && getcmdwintype() == '' | silent NERDTreeMirror | endif
